@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WiFi Configuration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            --success-color: #00d4aa;
+            --success-light: rgba(0, 212, 170, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
+            --border-radius: 16px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            max-height: 100vh;
+            box-sizing: border-box;
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+
+        .success-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-medium);
+            max-width: 400px;
+            width: 100%;
+            animation: slideUp 0.8s ease-out 0.3s both;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px) scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .checkmark-container {
+            margin-bottom: var(--spacing-lg);
+            animation: bounceIn 1s ease-out 0.8s both;
+        }
+
+        @keyframes bounceIn {
+            0% { 
+                opacity: 0;
+                transform: scale(0.3); 
+            }
+            50% { 
+                opacity: 1;
+                transform: scale(1.05); 
+            }
+            70% { 
+                transform: scale(0.9); 
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1); 
+            }
+        }
+
+        .checkmark {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            stroke: var(--success-color);
+            fill: var(--success-light);
+            animation: stroke-circle 0.8s cubic-bezier(0.65, 0, 0.45, 1) 1.2s both;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 170, 0.3));
+        }
+
+        .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            stroke-width: 3;
+            stroke: var(--success-color);
+            animation: stroke-check 0.5s cubic-bezier(0.65, 0, 0.45, 1) 2s both;
+        }
+
+        @keyframes stroke-circle {
+            0% {
+                stroke-dashoffset: 166;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes stroke-check {
+            0% {
+                stroke-dashoffset: 48;
+            }
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .success-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            background: linear-gradient(45deg, var(--success-color), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideIn 0.6s ease-out 1.5s both;
+        }
+
+        .success-message {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            animation: slideIn 0.6s ease-out 1.7s both;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .countdown-container {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            animation: slideIn 0.6s ease-out 1.9s both;
+        }
+
+        .countdown-text {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .countdown-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--success-color);
+            text-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+            animation: pulse 1s infinite;
+            display: block;
+            margin: var(--spacing-sm) 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: var(--spacing-sm);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), #ffffff);
+            border-radius: 2px;
+            animation: progress 3s linear;
+            transform-origin: left;
+        }
+
+        @keyframes progress {
+            from { 
+                transform: scaleX(1); 
+            }
+            to { 
+                transform: scaleX(0); 
+            }
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            font-size: 14px;
+            color: var(--text-muted);
+            animation: slideIn 0.6s ease-out 2.1s both;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .success-card {
+                padding: var(--spacing-md);
+                margin: var(--spacing-sm);
+            }
+            
+            .success-title {
+                font-size: 24px;
+            }
+            
+            .success-message {
+                font-size: 16px;
+            }
+            
+            .countdown-number {
+                font-size: 36px;
+            }
+        }
+
+        /* Floating particles animation */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles for ambiance -->
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
+    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
+    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 0.5s;"></div>
+    <div class="particle" style="left: 80%; animation-delay: 1.5s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
+
+    <div class="container">
+        <div class="success-card">
+            <div class="checkmark-container">
+                <svg class="checkmark" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            
+            <h1 class="success-title">连接成功！</h1>
+            <p class="success-message">WiFi配置已完成，设备正在重启</p>
+            
+            <div class="countdown-container">
+                <div class="countdown-text">设备将在以下时间后重启：</div>
+                <span class="countdown-number" id="countdown">3</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+            
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>正在准备重启设备...</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        window.addEventListener('load', function() {
+            let count = 3;
+            const countdownElement = document.getElementById('countdown');
+            
+            // Update countdown every second
+            const timer = setInterval(function() {
+                count--;
+                countdownElement.textContent = count;
+                
+                // Add special effects when reaching zero
+                if (count === 0) {
+                    countdownElement.style.color = '#ff6b6b';
+                    countdownElement.style.animation = 'pulse 0.3s infinite';
+                }
+                
+                if (count <= 0) {
+                    clearInterval(timer);
+                    
+                    // Update status message
+                    document.querySelector('.status-indicator span').textContent = '正在重启设备...';
+                    
+                    // Send reboot command
+                    fetch('/reboot', {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('重启指令已发送');
+                            // Try to close the window after a delay
+                            setTimeout(() => {
+                                try {
+                                    window.close();
+                                } catch (e) {
+                                    // If can't close, show a message
+                                    document.querySelector('.status-indicator span').textContent = '设备正在重启，请关闭此页面';
+                                }
+                            }, 1000);
+                        } else {
+                            console.error('发送重启指令失败');
+                            document.querySelector('.status-indicator span').textContent = '重启指令发送失败';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.querySelector('.status-indicator span').textContent = '连接错误，请手动重启设备';
+                    });
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
