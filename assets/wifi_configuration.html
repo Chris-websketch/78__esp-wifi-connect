@@ -8,28 +8,66 @@
     <style type="text/css">
         /* CSS Variables for consistent theming */
         :root {
+            /* 渐变色彩系统 */
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            --aurora-gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --aurora-gradient-2: linear-gradient(225deg, #f5576c 0%, #f093fb 50%, #667eea 100%);
+            --aurora-gradient-3: linear-gradient(45deg, #00d4aa 0%, #667eea 50%, #f093fb 100%);
+            --glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            --glow-gradient: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+            
+            /* 颜色系统 */
             --success-color: #00d4aa;
             --error-color: #ff6b6b;
             --warning-color: #ffa726;
+            --accent-color: #f093fb;
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-secondary: rgba(255, 255, 255, 0.85);
             --text-muted: rgba(255, 255, 255, 0.6);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.2);
-            --input-bg: rgba(255, 255, 255, 0.15);
-            --input-border: rgba(255, 255, 255, 0.3);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-bg-hover: rgba(255, 255, 255, 0.12);
+            --card-border: rgba(255, 255, 255, 0.18);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-bg-focus: rgba(255, 255, 255, 0.15);
+            --input-border: rgba(255, 255, 255, 0.25);
+            --input-border-focus: rgba(255, 255, 255, 0.5);
+            
+            /* 光效和阴影 */
             --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
-            --shadow-heavy: 0 20px 60px rgba(0, 0, 0, 0.2);
-            --border-radius: 16px;
-            --border-radius-small: 8px;
+            --shadow-medium: 0 12px 48px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 24px 64px rgba(0, 0, 0, 0.2);
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.4);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.1);
+            --inner-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            --glow-sm: 0 0 10px rgba(255, 255, 255, 0.5);
+            --glow-md: 0 0 20px rgba(255, 255, 255, 0.3);
+            --glow-lg: 0 0 40px rgba(255, 255, 255, 0.2);
+            
+            /* 圆角系统 */
+            --border-radius: 20px;
+            --border-radius-small: 12px;
+            --border-radius-tiny: 8px;
+            --border-radius-pill: 50px;
+            
+            /* 间距系统 */
             --spacing-xs: 8px;
             --spacing-sm: 16px;
             --spacing-md: 24px;
             --spacing-lg: 32px;
             --spacing-xl: 48px;
+            
+            /* 动画时长 */
+            --duration-fast: 0.2s;
+            --duration-normal: 0.3s;
+            --duration-slow: 0.6s;
+            --duration-slower: 1s;
+            
+            /* 缓动函数 */
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         /* Reset and base styles */
@@ -41,17 +79,119 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--primary-gradient);
+            background: #0a0a0a;
             min-height: 100vh;
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
             animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
+
+        /* 动态极光背景 */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.8;
+            animation: aurora var(--duration-slower) ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        body::before {
+            background: var(--aurora-gradient-1);
+            animation-duration: 25s;
+            animation-delay: 0s;
+        }
+
+        body::after {
+            background: var(--aurora-gradient-2);
+            animation-duration: 30s;
+            animation-delay: -5s;
+            opacity: 0.6;
+        }
+
+        /* 额外的背景层 */
+        body > *:first-child::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--aurora-gradient-3);
+            opacity: 0.3;
+            animation: aurora 35s ease-in-out infinite reverse;
+            animation-delay: -10s;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes aurora {
+            0%, 100% {
+                transform: rotate(0deg) scale(1) translateX(0);
+                filter: hue-rotate(0deg);
+            }
+            25% {
+                transform: rotate(45deg) scale(1.1) translateX(10%);
+                filter: hue-rotate(20deg);
+            }
+            50% {
+                transform: rotate(90deg) scale(1.2) translateX(-10%);
+                filter: hue-rotate(-20deg);
+            }
+            75% {
+                transform: rotate(135deg) scale(1.1) translateX(5%);
+                filter: hue-rotate(10deg);
+            }
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 粒子背景系统 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: var(--glow-sm);
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100vh) translateX(100px) scale(1);
+                opacity: 0;
+            }
         }
 
         /* Main container */
@@ -62,6 +202,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+            z-index: 2;
         }
 
         /* Header */
@@ -79,12 +221,24 @@
         }
 
         .title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            background: linear-gradient(135deg, #ffffff 0%, #f093fb 50%, #667eea 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-shadow: 0 0 30px rgba(240, 147, 251, 0.5);
+            position: relative;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { 
+                filter: brightness(1) drop-shadow(0 0 20px rgba(240, 147, 251, 0.5));
+            }
+            50% { 
+                filter: brightness(1.2) drop-shadow(0 0 40px rgba(240, 147, 251, 0.8));
+            }
         }
 
         .language-switch {
@@ -92,43 +246,100 @@
         }
 
         .language-switch select {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: var(--glass-gradient);
+            backdrop-filter: blur(10px) saturate(180%);
+            -webkit-backdrop-filter: blur(10px) saturate(180%);
             border: 1px solid var(--card-border);
-            border-radius: var(--border-radius-small);
+            border-radius: var(--border-radius-pill);
             color: var(--text-primary);
-            padding: var(--spacing-xs) var(--spacing-sm);
+            padding: var(--spacing-xs) var(--spacing-md);
+            padding-right: var(--spacing-lg);
             font-size: 14px;
+            font-weight: 500;
             outline: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--duration-normal) var(--ease-out-expo);
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ffffff' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            box-shadow: var(--shadow-light), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .language-switch select:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-light);
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-medium), var(--glow-sm);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .language-switch select:focus {
+            box-shadow: var(--shadow-medium), var(--glow-md), 0 0 0 3px rgba(255, 255, 255, 0.2);
         }
 
         /* Card component */
         .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--glass-gradient);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--card-border);
             border-radius: var(--border-radius);
             padding: var(--spacing-md);
             margin-bottom: var(--spacing-md);
-            box-shadow: var(--shadow-light);
-            transition: all 0.3s ease;
-            animation: slideUp 0.6s ease-out both;
+            box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all var(--duration-normal) var(--ease-out-expo);
+            animation: slideUp 0.6s var(--ease-out-back) both;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        /* 卡片光晕效果 */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--secondary-gradient);
+            border-radius: var(--border-radius);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity var(--duration-normal) ease;
+            filter: blur(10px);
+        }
+
+        /* 卡片内部光效 */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            opacity: 0.5;
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-medium);
-            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-8px) rotateX(2deg);
+            box-shadow: var(--shadow-heavy), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: var(--card-bg-hover);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 0.3;
         }
 
         @keyframes slideUp {
@@ -181,6 +392,25 @@
         /* Form elements */
         .form-group {
             margin-bottom: var(--spacing-sm);
+            position: relative;
+        }
+
+        .form-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-gradient);
+            transition: all var(--duration-normal) var(--ease-out-expo);
+            transform: translateX(-50%);
+            border-radius: 2px;
+            box-shadow: var(--glow-sm);
+        }
+
+        .form-group:focus-within::after {
+            width: 100%;
         }
 
         .form-label {
@@ -202,18 +432,26 @@
             color: var(--text-primary);
             font-size: 16px;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all var(--duration-normal) var(--ease-out-expo);
+            position: relative;
+            box-shadow: var(--inner-shadow);
         }
 
         .form-input::placeholder {
             color: var(--text-muted);
+            transition: all var(--duration-normal) ease;
         }
 
         .form-input:focus {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            background: var(--input-bg-focus);
+            border-color: var(--input-border-focus);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1), var(--glow-md), var(--inner-shadow);
             transform: translateY(-2px);
+        }
+
+        .form-input:focus::placeholder {
+            opacity: 0.5;
+            transform: translateX(5px);
         }
 
         /* Buttons */
@@ -224,45 +462,94 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--duration-normal) var(--ease-out-expo);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             min-height: 48px;
             text-decoration: none;
             outline: none;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            z-index: 1;
+        }
+
+        /* 按钮涟漪效果 */
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
             background: var(--secondary-gradient);
             color: white;
-            box-shadow: var(--shadow-light);
+            box-shadow: var(--shadow-light), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+            transform: rotate(45deg) translateY(100%);
+            transition: transform 0.6s;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-medium), var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover::after {
+            transform: rotate(45deg) translateY(-100%);
         }
 
         .btn-primary:active {
-            transform: translateY(-1px);
+            transform: translateY(-1px) scale(0.98);
         }
 
         .btn-primary:disabled {
             opacity: 0.6;
             transform: none;
             cursor: not-allowed;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn-primary:disabled::after {
+            display: none;
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
             border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: var(--shadow-light), var(--glow-sm);
         }
 
         .btn-small {
@@ -284,21 +571,41 @@
             align-items: center;
             padding: var(--spacing-sm);
             margin-bottom: var(--spacing-xs);
-            background: rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
             border-radius: var(--border-radius-small);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all var(--duration-normal) var(--ease-out-expo);
             border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .wifi-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .wifi-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateX(4px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
+            transform: perspective(1000px) rotateX(-5deg) translateY(-4px) scale(1.02);
             border-color: var(--card-border);
+            box-shadow: var(--shadow-medium), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .wifi-item:hover::before {
+            left: 100%;
         }
 
         .wifi-item:active {
-            transform: translateX(2px);
+            transform: perspective(1000px) rotateX(-2deg) translateY(-2px) scale(1);
         }
 
         .wifi-info {
@@ -331,25 +638,43 @@
 
         .signal-strength {
             display: flex;
-            gap: 2px;
+            gap: 3px;
             align-items: end;
+            padding: 4px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius-tiny);
+            margin-left: var(--spacing-xs);
         }
 
         .signal-bar {
-            width: 3px;
+            width: 4px;
             background: var(--text-muted);
             border-radius: 2px;
-            transition: all 0.3s ease;
+            transition: all var(--duration-normal) var(--ease-out-expo);
+            position: relative;
+            overflow: hidden;
         }
 
         .signal-bar.active {
-            background: var(--success-color);
+            background: linear-gradient(to top, var(--success-color), var(--accent-color));
+            box-shadow: 0 0 8px var(--success-color);
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .signal-bar.active::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), transparent);
+            animation: signalWave 1.5s infinite;
+        }
+
+        @keyframes signalWave {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
         }
 
         .signal-bar:nth-child(1) { height: 8px; }
@@ -359,14 +684,57 @@
 
         /* Error messages */
         .error-message {
-            background: rgba(255, 107, 107, 0.1);
-            border: 1px solid rgba(255, 107, 107, 0.3);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0.1) 100%);
+            border: 1px solid rgba(255, 107, 107, 0.4);
             color: var(--error-color);
             padding: var(--spacing-sm);
             border-radius: var(--border-radius-small);
             margin-bottom: var(--spacing-sm);
             font-size: 14px;
-            animation: shake 0.5s ease-in-out;
+            font-weight: 500;
+            animation: shake 0.5s ease-in-out, fadeInError 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .error-message::before {
+            content: '⚠️';
+            margin-right: var(--spacing-xs);
+            font-size: 16px;
+            animation: bounce 0.5s ease-out;
+        }
+
+        .error-message::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--error-color);
+            animation: errorBar 2s ease-out;
+        }
+
+        @keyframes fadeInError {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes errorBar {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         @keyframes shake {
@@ -375,10 +743,21 @@
             75% { transform: translateX(5px); }
         }
 
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
         /* Loading states */
         .loading {
             opacity: 0.7;
             pointer-events: none;
+            position: relative;
         }
 
         .loading::after {
@@ -386,18 +765,42 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid var(--text-muted);
-            border-top: 2px solid var(--text-primary);
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--accent-color);
+            border-right: 3px solid var(--accent-color);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite, glow 2s ease-in-out infinite;
+            box-shadow: 0 0 20px var(--accent-color);
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .loading::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            margin: -20px 0 0 -20px;
+            border: 2px solid transparent;
+            border-bottom: 2px solid var(--secondary-gradient);
+            border-left: 2px solid var(--secondary-gradient);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px var(--accent-color);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 40px var(--accent-color), 0 0 60px var(--accent-color);
+                transform: scale(1.1);
+            }
         }
 
         /* Responsive design */
@@ -441,6 +844,7 @@
     </style>
 </head>
 <body>
+    <div class="particles" id="particles"></div>
     <div class="container">
         <div class="header">
             <h1 class="title" data-lang="title">WiFi 配置</h1>
@@ -664,6 +1068,7 @@
             changeLanguage();
             loadSavedList();
             loadAPList();
+            initParticles();
         });
 
         window.addEventListener('pageshow', (event) => {
@@ -710,6 +1115,39 @@
                 error.classList.remove('hidden');
                 button.disabled = false;
                 button.textContent = translations[lang].connect;
+            }
+        }
+
+        // 初始化粒子系统
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30; // 减少粒子数量以优化性能
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机位置
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // 随机大小
+                const size = Math.random() * 3 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // 随机动画持续时间
+                const duration = Math.random() * 20 + 20;
+                particle.style.animationDuration = duration + 's';
+                
+                // 随机动画延迟
+                const delay = Math.random() * 20;
+                particle.style.animationDelay = delay + 's';
+                
+                // 随机透明度
+                particle.style.opacity = Math.random() * 0.6 + 0.2;
+                
+                particlesContainer.appendChild(particle);
             }
         }
     </script>

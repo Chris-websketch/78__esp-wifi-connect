@@ -7,22 +7,63 @@
     <style>
         /* CSS Variables for consistent theming */
         :root {
+            /* 渐变色彩系统 */
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --secondary-gradient: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            --aurora-gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --aurora-gradient-2: linear-gradient(225deg, #f5576c 0%, #f093fb 50%, #667eea 100%);
+            --aurora-gradient-3: linear-gradient(45deg, #00d4aa 0%, #667eea 50%, #f093fb 100%);
+            --glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            --glow-gradient: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+            --success-gradient: linear-gradient(135deg, #00d4aa 0%, #00f2c3 100%);
+            
+            /* 颜色系统 */
             --success-color: #00d4aa;
-            --success-light: rgba(0, 212, 170, 0.1);
+            --success-light: rgba(0, 212, 170, 0.15);
+            --success-glow: rgba(0, 212, 170, 0.6);
+            --accent-color: #f093fb;
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-secondary: rgba(255, 255, 255, 0.85);
             --text-muted: rgba(255, 255, 255, 0.6);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.2);
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-bg-hover: rgba(255, 255, 255, 0.12);
+            --card-border: rgba(255, 255, 255, 0.18);
+            
+            /* 光效和阴影 */
             --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --shadow-medium: 0 12px 40px rgba(0, 0, 0, 0.15);
-            --border-radius: 16px;
+            --shadow-medium: 0 12px 48px rgba(0, 0, 0, 0.15);
+            --shadow-heavy: 0 24px 64px rgba(0, 0, 0, 0.2);
+            --shadow-glow: 0 0 40px rgba(0, 212, 170, 0.5);
+            --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(0, 0, 0, 0.1);
+            --inner-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            --glow-sm: 0 0 10px rgba(255, 255, 255, 0.5);
+            --glow-md: 0 0 20px rgba(255, 255, 255, 0.3);
+            --glow-lg: 0 0 40px rgba(255, 255, 255, 0.2);
+            
+            /* 圆角系统 */
+            --border-radius: 20px;
+            --border-radius-small: 12px;
+            --border-radius-tiny: 8px;
+            --border-radius-pill: 50px;
+            
+            /* 间距系统 */
+            --spacing-xs: 8px;
             --spacing-sm: 16px;
             --spacing-md: 24px;
             --spacing-lg: 32px;
             --spacing-xl: 48px;
+            
+            /* 动画时长 */
+            --duration-fast: 0.2s;
+            --duration-normal: 0.3s;
+            --duration-slow: 0.6s;
+            --duration-slower: 1s;
+            
+            /* 缓动函数 */
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         /* Reset and base styles */
@@ -34,12 +75,59 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--primary-gradient);
+            background: #0a0a0a;
             min-height: 100vh;
             color: var(--text-primary);
             line-height: 1.6;
             overflow: hidden;
             animation: fadeIn 0.8s ease-out;
+            position: relative;
+        }
+
+        /* 动态极光背景 */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.8;
+            animation: aurora var(--duration-slower) ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        body::before {
+            background: var(--aurora-gradient-1);
+            animation-duration: 25s;
+            animation-delay: 0s;
+        }
+
+        body::after {
+            background: var(--aurora-gradient-2);
+            animation-duration: 30s;
+            animation-delay: -5s;
+            opacity: 0.6;
+        }
+
+        @keyframes aurora {
+            0%, 100% {
+                transform: rotate(0deg) scale(1) translateX(0);
+                filter: hue-rotate(0deg);
+            }
+            25% {
+                transform: rotate(45deg) scale(1.1) translateX(10%);
+                filter: hue-rotate(20deg);
+            }
+            50% {
+                transform: rotate(90deg) scale(1.2) translateX(-10%);
+                filter: hue-rotate(-20deg);
+            }
+            75% {
+                transform: rotate(135deg) scale(1.1) translateX(5%);
+                filter: hue-rotate(10deg);
+            }
         }
 
         @keyframes fadeIn {
@@ -57,19 +145,64 @@
             box-sizing: border-box;
             padding: var(--spacing-md);
             text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
         .success-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: var(--glass-gradient);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid var(--card-border);
             border-radius: var(--border-radius);
             padding: var(--spacing-xl);
-            box-shadow: var(--shadow-medium);
+            box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             max-width: 400px;
             width: 100%;
-            animation: slideUp 0.8s ease-out 0.3s both;
+            animation: slideUp 0.8s var(--ease-out-back) 0.3s both;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        /* 卡片光晕效果 */
+        .success-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--success-gradient);
+            border-radius: var(--border-radius);
+            opacity: 0.3;
+            z-index: -1;
+            filter: blur(15px);
+            animation: successGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes successGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.02); }
+        }
+
+        /* 卡片内部光效 */
+        .success-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            opacity: 0.5;
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         @keyframes slideUp {
@@ -86,6 +219,7 @@
         .checkmark-container {
             margin-bottom: var(--spacing-lg);
             animation: bounceIn 1s ease-out 0.8s both;
+            position: relative;
         }
 
         @keyframes bounceIn {
@@ -111,6 +245,7 @@
             height: 120px;
             margin: 0 auto;
             position: relative;
+            filter: drop-shadow(0 0 30px var(--success-glow));
         }
 
         .checkmark__circle {
@@ -121,7 +256,7 @@
             stroke: var(--success-color);
             fill: var(--success-light);
             animation: stroke-circle 0.8s cubic-bezier(0.65, 0, 0.45, 1) 1.2s both;
-            filter: drop-shadow(0 0 10px rgba(0, 212, 170, 0.3));
+            filter: drop-shadow(0 0 15px var(--success-glow));
         }
 
         .checkmark__check {
@@ -131,6 +266,33 @@
             stroke-width: 3;
             stroke: var(--success-color);
             animation: stroke-check 0.5s cubic-bezier(0.65, 0, 0.45, 1) 2s both;
+            filter: drop-shadow(0 0 10px var(--success-glow));
+        }
+
+        /* 成功图标光环 */
+        .checkmark-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--success-glow) 0%, transparent 70%);
+            animation: pulseRing 2s ease-out 2.5s infinite;
+            opacity: 0;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
         @keyframes stroke-circle {
@@ -152,14 +314,32 @@
         }
 
         .success-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             margin-bottom: var(--spacing-sm);
-            background: linear-gradient(45deg, var(--success-color), #ffffff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: slideIn 0.6s ease-out 1.5s both;
+            color: var(--text-primary); /* 后备颜色 */
+            animation: slideIn 0.6s ease-out 1.5s both, titleGlow 3s ease-in-out infinite;
+            position: relative;
+            text-shadow: 0 0 30px var(--success-glow);
+        }
+
+        /* 支持渐变文字的浏览器使用渐变效果 */
+        @supports (-webkit-background-clip: text) {
+            .success-title {
+                background: linear-gradient(135deg, #ffffff 0%, var(--success-color) 50%, var(--accent-color) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { 
+                filter: brightness(1) drop-shadow(0 0 20px var(--success-glow));
+            }
+            50% { 
+                filter: brightness(1.2) drop-shadow(0 0 40px var(--success-glow));
+            }
         }
 
         .success-message {
@@ -181,12 +361,33 @@
         }
 
         .countdown-container {
-            background: rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
             border: 1px solid var(--card-border);
-            border-radius: 12px;
+            border-radius: var(--border-radius-small);
             padding: var(--spacing-md);
             margin-bottom: var(--spacing-md);
             animation: slideIn 0.6s ease-out 1.9s both;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--inner-shadow), 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.5s ease-out;
+        }
+
+        .countdown-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: sweep 2s ease-out 2.5s;
+        }
+
+        @keyframes sweep {
+            to { left: 100%; }
         }
 
         .countdown-text {
@@ -196,13 +397,30 @@
         }
 
         .countdown-number {
-            font-size: 48px;
+            font-size: 56px;
             font-weight: 700;
-            color: var(--success-color);
-            text-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
-            animation: pulse 1s infinite;
+            color: var(--success-color); /* 后备颜色 */
+            text-shadow: 0 0 40px var(--success-glow);
+            animation: pulse 1s infinite, numberGlow 2s ease-in-out infinite;
             display: block;
             margin: var(--spacing-sm) 0;
+            position: relative;
+            filter: drop-shadow(0 0 20px var(--success-glow));
+        }
+
+        /* 支持渐变文字的浏览器使用渐变效果 */
+        @supports (-webkit-background-clip: text) {
+            .countdown-number {
+                background: linear-gradient(135deg, var(--success-color) 0%, var(--accent-color) 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+        }
+
+        @keyframes numberGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         @keyframes pulse {
@@ -218,19 +436,40 @@
 
         .progress-bar {
             width: 100%;
-            height: 4px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
+            border-radius: 3px;
             overflow: hidden;
             margin-top: var(--spacing-sm);
+            box-shadow: var(--inner-shadow);
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--success-color), #ffffff);
-            border-radius: 2px;
+            background: var(--success-gradient);
+            border-radius: 3px;
             animation: progress 3s linear;
             transform-origin: left;
+            box-shadow: 0 0 10px var(--success-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShine 1s ease-out infinite;
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         @keyframes progress {
@@ -253,11 +492,37 @@
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: var(--success-color);
+            background: var(--success-gradient);
             animation: blink 2s infinite;
+            box-shadow: 0 0 15px var(--success-glow), inset 0 0 5px rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid var(--success-color);
+            opacity: 0;
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
         @keyframes blink {
@@ -281,23 +546,46 @@
             }
             
             .countdown-number {
-                font-size: 36px;
+                font-size: 42px;
+            }
+            
+            /* 确保在不支持渐变文字的设备上颜色清晰可见 */
+            @supports not (-webkit-background-clip: text) {
+                .countdown-number {
+                    color: var(--success-color) !important;
+                }
+                
+                .success-title {
+                    color: var(--text-primary) !important;
+                }
             }
         }
 
-        /* Floating particles animation */
+        /* 粒子背景系统 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
         .particle {
             position: absolute;
             width: 4px;
             height: 4px;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 50%;
-            animation: float 6s infinite linear;
+            box-shadow: var(--glow-sm);
+            animation: float linear infinite;
         }
 
         @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
+            from {
+                transform: translateY(100vh) translateX(0) scale(0);
                 opacity: 0;
             }
             10% {
@@ -306,25 +594,16 @@
             90% {
                 opacity: 1;
             }
-            100% {
-                transform: translateY(-10vh) translateX(100px) rotate(360deg);
+            to {
+                transform: translateY(-100vh) translateX(100px) scale(1);
                 opacity: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Floating particles for ambiance -->
-    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
-    <div class="particle" style="left: 30%; animation-delay: 2s;"></div>
-    <div class="particle" style="left: 40%; animation-delay: 3s;"></div>
-    <div class="particle" style="left: 50%; animation-delay: 4s;"></div>
-    <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
-    <div class="particle" style="left: 70%; animation-delay: 0.5s;"></div>
-    <div class="particle" style="left: 80%; animation-delay: 1.5s;"></div>
-    <div class="particle" style="left: 90%; animation-delay: 2.5s;"></div>
-
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
         <div class="success-card">
             <div class="checkmark-container">
@@ -353,52 +632,96 @@
     </div>
     
     <script>
+        // 初始化粒子系统
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机位置
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // 随机大小
+                const size = Math.random() * 3 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                // 随机动画持续时间
+                const duration = Math.random() * 20 + 20;
+                particle.style.animationDuration = duration + 's';
+                
+                // 随机动画延迟
+                const delay = Math.random() * 20;
+                particle.style.animationDelay = delay + 's';
+                
+                // 随机透明度
+                particle.style.opacity = Math.random() * 0.6 + 0.2;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
         window.addEventListener('load', function() {
+            initParticles();
+            
             let count = 3;
             const countdownElement = document.getElementById('countdown');
             
             // Update countdown every second
             const timer = setInterval(function() {
                 count--;
-                countdownElement.textContent = count;
-                
-                // Add special effects when reaching zero
-                if (count === 0) {
-                    countdownElement.style.color = '#ff6b6b';
-                    countdownElement.style.animation = 'pulse 0.3s infinite';
-                }
                 
                 if (count <= 0) {
                     clearInterval(timer);
                     
-                    // Update status message
-                    document.querySelector('.status-indicator span').textContent = '正在重启设备...';
+                    // 隐藏倒计时容器
+                    document.querySelector('.countdown-container').style.opacity = '0';
+                    document.querySelector('.countdown-container').style.transform = 'translateY(-20px)';
+                    document.querySelector('.countdown-container').style.transition = 'all 0.5s ease-out';
                     
-                    // Send reboot command
-                    fetch('/reboot', {
-                        method: 'POST'
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            console.log('重启指令已发送');
-                            // Try to close the window after a delay
-                            setTimeout(() => {
-                                try {
-                                    window.close();
-                                } catch (e) {
-                                    // If can't close, show a message
-                                    document.querySelector('.status-indicator span').textContent = '设备正在重启，请关闭此页面';
-                                }
-                            }, 1000);
-                        } else {
-                            console.error('发送重启指令失败');
-                            document.querySelector('.status-indicator span').textContent = '重启指令发送失败';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        document.querySelector('.status-indicator span').textContent = '连接错误，请手动重启设备';
-                    });
+                    // 延迟隐藏倒计时容器后显示成功信息
+                    setTimeout(() => {
+                        document.querySelector('.countdown-container').style.display = 'none';
+                        
+                        // 更新状态信息
+                        document.querySelector('.status-indicator span').textContent = '设备重启成功！';
+                        document.querySelector('.status-indicator span').style.color = 'var(--success-color)';
+                        document.querySelector('.status-indicator span').style.fontWeight = '600';
+                        
+                        // 发送重启指令
+                        fetch('/reboot', {
+                            method: 'POST'
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log('重启指令已发送');
+                                // 延迟后尝试关闭窗口
+                                setTimeout(() => {
+                                    try {
+                                        window.close();
+                                    } catch (e) {
+                                        // 如果无法关闭，显示提示信息
+                                        document.querySelector('.status-indicator span').textContent = '配置完成，您可以关闭此页面';
+                                    }
+                                }, 2000);
+                            } else {
+                                console.error('发送重启指令失败');
+                                document.querySelector('.status-indicator span').textContent = '重启指令发送失败';
+                                document.querySelector('.status-indicator span').style.color = 'var(--error-color)';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            document.querySelector('.status-indicator span').textContent = '连接错误，请手动重启设备';
+                            document.querySelector('.status-indicator span').style.color = 'var(--error-color)';
+                        });
+                    }, 500);
+                } else {
+                    countdownElement.textContent = count;
                 }
             }, 1000);
         });
